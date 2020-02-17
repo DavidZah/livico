@@ -1,5 +1,5 @@
 # livico
-Liver Visualization Controller based on Ardunio
+Liver Visualization Controller based on Arduino
 
 
 - Fallow [this link](https://mjirik.github.io/livico/livico.html) with Chrome browser
