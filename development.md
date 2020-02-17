@@ -51,3 +51,35 @@ What is GATT
 ----
 
 https://www.oreilly.com/library/view/getting-started-with/9781491900550/ch04.html
+
+
+Project on IIS
+====
+
+
+projekt LiViCo 
+Liver Visualization Controller
+c:/inetpub/wwwroot/livico
+
+
+Hardware
+===
+
+arduino nano 33 ble
+
+https://store.arduino.cc/arduino-nano-33-ble-with-headers
+
+
+
+nabijeci modul datasheet
+https://learn.adafruit.com/adafruit-powerboost-500-plus-charger/pinouts
+
+
+do příště revize kódu, 
+přeprogramovat operace v javascriptu
+
+
+3D model
+===
+
+C:/Users/mjirik/.julia/dev/LarSurf/ircad01.pvsm
