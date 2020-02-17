@@ -6,4 +6,4 @@ Liver Visualization Controller based on Ardunio
 - Click the green button on the webpage to pair to your Arduino
 
 
-See [development page](development) for more details.
+See [development page](development.md) for more details.
