@@ -1,309 +1,350 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-  <link href="https://fonts.googleapis.com/css?family=Comfortaa" rel="stylesheet">
-  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/97/three.min.js"></script>
-  <script src="3d-model/GLTFLoader.js"></script>
-  <style>
-  body,h1,p {margin: 16;background: #ffffff;color: black;font-family: 'Comfortaa', cursive;}
-  h1 {font-size: 20px;}
-  #bigButton {
-    background-color: green; border: none; color: black; padding: 1px; text-align: center;
-    text-decoration: none; font-size: 8px; margin: 4px 10px; height: 16px; width: 16px;
-    border-radius: 50%; outline:none; font-family: 'Open Sans', sans-serif;
-  }
-  </style>
+    <link href="https://fonts.googleapis.com/css?family=Comfortaa" rel="stylesheet">
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/97/three.min.js"></script>
+    <script src="3d-model/GLTFLoader.js"></script>
+    <style>
+        body, h1, p {
+            margin: 16;
+            background: #ffffff;
+            color: black;
+            font-family: 'Comfortaa', cursive;
+        }
+
+        h1 {
+            font-size: 20px;
+        }
+
+        #bigButton {
+            background-color: green;
+            border: none;
+            color: black;
+            padding: 1px;
+            text-align: center;
+            text-decoration: none;
+            font-size: 8px;
+            margin: 4px 10px;
+            height: 16px;
+            width: 16px;
+            border-radius: 50%;
+            outline: none;
+            font-family: 'Open Sans', sans-serif;
+        }
+    </style>
 </head>
 <body>
-	<h1>Liver 23</h1>
-	<!-- <h1>Liver</h1> -->
- 
-    <div style="width:100%;height:800px;margin-top:20px;margin-bottom:5px;">
-      <div id="3d" style="width: 400px; float: left;height:800px; "></div>
-	  <!-- <div id="3d" style="width: 1100px; float: left;height:800px; "></div> -->
-	  <div id="3d" style="width: 800px; float: left;height:800px; "></div>
-      <div style="width:95%;height:100%;border-color: white;border-style: solid;border-width: 1;">
-	    <div style="width:100%;height:30px;border-color: white;border-style: solid;border-width: 1;border-left:none;border-top:none;margin-top:5px;" id="status">
-	      <button id="bigButton" ></button><div style="display: inline-block;margin-left: 10px" id="infoBar">Click to connect via Bluetooth</div>
-	    </div>
+<h1>Liver 23</h1>
+<!-- <h1>Liver</h1> -->
 
-      <div>
-	  <input id="checkbox1" type="checkbox" name="control" value="manual" onchange="checkManual()">Manual Control<br>
-	  <output id="checkbox1Val"> </output>
-      <input id="slider1" type="range" min="-4" max="4" step="0.1" value="0" onchange="onSlider1Change()">
-      <output id="sliderVal1"> </output>
-	  <input id="slider2" type="range" min="-4" max="4" step="0.1" value="0" onchange="onSlider2Change()">
-      <output id="sliderVal2"> </output>
-	  <input id="slider3" type="range" min="-4" max="4" step="0.1" value="0" onchange="onSlider3Change()">
-      <output id="sliderVal3"> </output>
-	  </div>
-      <div id="graph1" style="margin-left: 1100px;height:300px;"></div>
-	  <div id="graph2" style="margin-left: 1100px;height:200px;"></div>
-	  <div id="graph3" style="margin-left: 1100px;height:200px;"></div>
+<div style="width:100%;height:800px;margin-top:20px;margin-bottom:5px;">
+    <div id="3d" style="width: 400px; float: left;height:800px; "></div>
+    <!-- <div id="3d" style="width: 1100px; float: left;height:800px; "></div> -->
+    <div id="3d" style="width: 800px; float: left;height:800px; "></div>
+    <div style="width:95%;height:100%;border-color: white;border-style: solid;border-width: 1;">
+        <div style="width:100%;height:30px;border-color: white;border-style: solid;border-width: 1;border-left:none;border-top:none;margin-top:5px;"
+             id="status">
+            <button id="bigButton"></button>
+            <div style="display: inline-block;margin-left: 10px" id="infoBar">Click to connect via Bluetooth</div>
+        </div>
+
+        <div>
+            <input id="checkbox1" type="checkbox" name="control" value="manual" onchange="checkManual()">Manual
+            Control<br>
+            <output id="checkbox1Val"></output>
+            <input id="slider1" type="range" min="-4" max="4" step="0.1" value="0" onchange="onSlider1Change()">
+            <output id="sliderVal1"></output>
+            <input id="slider2" type="range" min="-4" max="4" step="0.1" value="0" onchange="onSlider2Change()">
+            <output id="sliderVal2"></output>
+            <input id="slider3" type="range" min="-4" max="4" step="0.1" value="0" onchange="onSlider3Change()">
+            <output id="sliderVal3"></output>
+        </div>
+        <div id="graph1" style="margin-left: 1100px;height:300px;"></div>
+        <div id="graph2" style="margin-left: 1100px;height:200px;"></div>
+        <div id="graph3" style="margin-left: 1100px;height:200px;"></div>
     </div>
-  </div>
+</div>
 </body>
-<script type = 'text/javascript'>
+<script type='text/javascript'>
 
-/*
-A Web Bluetooth connection example
-gathering three characteristics from a 3-axis accelerometer
-created 6 Aug 2018
-by Tom Igoe
+    /*
+    A Web Bluetooth connection example
+    gathering three characteristics from a 3-axis accelerometer
+    created 6 Aug 2018
+    by Tom Igoe
 
-*/
+    */
 
-// BLE device
-var myDevice;
+    // BLE device
+    var myDevice;
 
-// Arduino IMU data array
-var graphData1 = {x: [], y: [], z:[]};
+    // Arduino IMU data array
+    var graphData1 = {x: [], y: [], z: []};
 
-// 3D scene
-var renderer = new THREE.WebGLRenderer();
-var scene = new THREE.Scene();
-var camera = new THREE.PerspectiveCamera(75, 1, 1, 10000);
-var arduinoModel;
+    // 3D scene
+    var renderer = new THREE.WebGLRenderer();
+    var scene = new THREE.Scene();
+    var camera = new THREE.PerspectiveCamera(75, 1, 1, 10000);
+    var arduinoModel;
 
-// fill your peripheral service and characteristic UUIDs here:
-const imuService = '917649a0-d98e-11e5-9eec-0002a5d5c51b';
-const imuChar = '917649a1-d98e-11e5-9eec-0002a5d5c51b';
-const bigButton = document.getElementById('bigButton');
-const infoBar= document.getElementById('infoBar');
-const colors = ["#FF355E","#FD5B78","#FF6037","#FF9966","#FF9933","#FFCC33","#FFFF66","#FFFF66","#CCFF00","#66FF66","#AAF0D1","#50BFE6","#FF6EFF","#EE34D2","#FF00CC","#FF00CC"];
+    // fill your peripheral service and characteristic UUIDs here:
+    const imuService = '917649a0-d98e-11e5-9eec-0002a5d5c51b';
+    const imuChar = '917649a1-d98e-11e5-9eec-0002a5d5c51b';
+    const bigButton = document.getElementById('bigButton');
+    const infoBar = document.getElementById('infoBar');
+    const colors = ["#FF355E", "#FD5B78", "#FF6037", "#FF9966", "#FF9933", "#FFCC33", "#FFFF66", "#FFFF66", "#CCFF00", "#66FF66", "#AAF0D1", "#50BFE6", "#FF6EFF", "#EE34D2", "#FF00CC", "#FF00CC"];
 
-var calibrated = 0;
-var sl1 = 0;
-var sl2 = 0;
-var sl3 = 0;
+    var calibrated = 0;
+    var sl1 = 0;
+    var sl2 = 0;
+    var sl3 = 0;
 
-var useManual = false
-var clock = new THREE.Clock;
-var statTime;
+    var useManual = false
+    var clock = new THREE.Clock;
+    var statTime;
 
-function checkManual(){
-   var val = document.getElementById("checkbox1").checked //gets the oninput value
-   document.getElementById('checkbox1Val').innerHTML = val //displays this value to the html page
-   useManual = val
-   console.log(val)
-}
-
-function onSlider1Change(){
-	var val = document.getElementById("slider1").value
-	sl1 = val
-	var euler = new THREE.Euler( sl1, sl2, sl3, 'XYZ' );
-	arduinoModel.setRotationFromEuler(euler);
-    renderer.render(scene, camera);
-	document.getElementById('sliderVal1').innerHTML = val
-	
-}
-
-function onSlider2Change(){
-	var val = document.getElementById("slider2").value
-	sl2 = val
-	var euler = new THREE.Euler( sl1, sl2, sl3, 'XYZ' );
-	arduinoModel.setRotationFromEuler(euler);
-    renderer.render(scene, camera);
-	document.getElementById('sliderVal2').innerHTML = val
-	
-}
-
-function onSlider3Change(){
-	var val = document.getElementById("slider3").value
-	sl3 = val
-	var euler = new THREE.Euler( sl1, sl2, sl3, 'XYZ' );
-	arduinoModel.setRotationFromEuler(euler);
-    renderer.render(scene, camera);
-	document.getElementById('sliderVal3').innerHTML = val
-	
-}
-
-
-if ("bluetooth" in navigator) {
-  bigButton.addEventListener('click', function(event) {
-    connect();
-  });
-  // else the browser doesn't support bluetooth
-} else {
-  status("browser not supported"); bigButton.style.backgroundColor = "red";
-  alert("Error: This browser doesn't support Web Bluetooth. Try using Chrome.");
-}
-
-function status(stat){
-  infoBar.innerHTML = stat;
-}
-
-// connect to the Bluetooth peripheral:
-function connect() {
-  navigator.bluetooth.requestDevice({filters: [{ services: [imuService] }]
-  }).then(function (device) {
-    myDevice = device;
-    status('Connecting to GATT server...'); return device.gatt.connect();
-  }).then(function (server) {
-    status('Getting service...'); return server.getPrimaryService(imuService);
-  }).then(function (service) {
-    status('Getting characteristics...'); return service.getCharacteristics();
-  }).then(function (characteristics) {
-    status('Subscribing...');
-    for (c in characteristics) {
-      characteristics[c].addEventListener('characteristicvaluechanged', handleData);
-      characteristics[c].startNotifications();
+    function checkManual() {
+        var val = document.getElementById("checkbox1").checked //gets the oninput value
+        document.getElementById('checkbox1Val').innerHTML = val //displays this value to the html page
+        useManual = val
+        console.log(val)
     }
-    infoBar.innerHTML = "Connected"; bigButton.style.backgroundColor = "#00ffff";
-  })
-  .catch(function (error) {
-    // catch any errors:
-    console.error('Connection failed!', error);
-  });
-}
 
-// handle incoming data:
-function handleData(event) {
-  // get the data  from the peripheral:
-  var x = event.target.value.getFloat32(0,true); // true = byte order from Arduino is littleEndian
-  var y = event.target.value.getFloat32(4,true);
-  var z = event.target.value.getFloat32(8,true);
+    function onSlider1Change() {
+        var val = document.getElementById("slider1").value
+        sl1 = val
+        var euler = new THREE.Euler(sl1, sl2, sl3, 'XYZ');
+        arduinoModel.setRotationFromEuler(euler);
+        renderer.render(scene, camera);
+        document.getElementById('sliderVal1').innerHTML = val
 
-  updateData(x,y,z); // NB need to invert to match sensor coordinate system to our 3d model
-}
+    }
 
-// disconnect function:
-function disconnect() {
-  if (myDevice) {
-    // disconnect:
-    myDevice.gatt.disconnect();
-  }
-}
+    function onSlider2Change() {
+        var val = document.getElementById("slider2").value
+        sl2 = val
+        var euler = new THREE.Euler(sl1, sl2, sl3, 'XYZ');
+        arduinoModel.setRotationFromEuler(euler);
+        renderer.render(scene, camera);
+        document.getElementById('sliderVal2').innerHTML = val
 
-// Handle Arduino client input data
-function updateData(x,y,z, ax, ay, az, mx, my, mz) {
-    x = x * 0.0174533
-    y = y * 0.0174533
-    z = z * 0.0174533
-  if (calibrated == 0){
-    // We assume initial position of physical device is as shown in 3D model before connection
-    lastX = x; lastY = y; lastZ = z;
-    lastX = 0; lastY = 0; lastZ = 0;
-    calibrated = 1;
-  }
+    }
 
-  graphData1.x.push(x);graphData1.y.push(y);graphData1.z.push(z);
-  // Only record last 200 entries
-  if (graphData1.x.length>200) {
-  graphData1.x.shift();graphData1.y.shift();graphData1.z.shift();
-  }
-  // Update graph
-  
-  var currentTime = clock.getElapsedTime() - startTime;
-  if (currentTime > 0.1) {
-    Plotly.update('graph1', {y: [graphData1.x,graphData1.y,graphData1.z]});
-	startTime = clock.getElapsedTime();
-  }
-  
-  //checkManual()
+    function onSlider3Change() {
+        var val = document.getElementById("slider3").value
+        sl3 = val
+        var euler = new THREE.Euler(sl1, sl2, sl3, 'XYZ');
+        arduinoModel.setRotationFromEuler(euler);
+        renderer.render(scene, camera);
+        document.getElementById('sliderVal3').innerHTML = val
 
-  // Update 3D model
-  if (useManual == false){
-    var euler = new THREE.Euler( x + Math.PI, y, z, 'XYZ' );
-    arduinoModel.setRotationFromEuler(euler);
-  }
-
-  arduinoModel.rotation.z = x; // delta converted to radians
-  arduinoModel.rotation.y = y;
-  arduinoModel.rotation.z = z;
-
-  renderer.render(scene, camera);
-}
+    }
 
 
+    if ("bluetooth" in navigator) {
+        bigButton.addEventListener('click', function (event) {
+            connect();
+        });
+        // else the browser doesn't support bluetooth
+    } else {
+        status("browser not supported");
+        bigButton.style.backgroundColor = "red";
+        alert("Error: This browser doesn't support Web Bluetooth. Try using Chrome.");
+    }
 
-function initOneGraph(graph_id, properties){
-  //var graph_id = 'graph'
-  var traceData=[];
-  //var properties = ["x","y","z", "ax", "ay", "az", "mx", "my", "mz"];
-  var i = 0;
-  properties.forEach(function(key) {
-    i++;
-    var trace = {
-      y: [],
-      mode: 'scatter',
-      line: {color: colors[(i *2 )]},
-      name: key
+    function status(stat) {
+        infoBar.innerHTML = stat;
+    }
+
+    // connect to the Bluetooth peripheral:
+    function connect() {
+        navigator.bluetooth.requestDevice({
+            filters: [{services: [imuService]}]
+        }).then(function (device) {
+            myDevice = device;
+            status('Connecting to GATT server...');
+            return device.gatt.connect();
+        }).then(function (server) {
+            status('Getting service...');
+            return server.getPrimaryService(imuService);
+        }).then(function (service) {
+            status('Getting characteristics...');
+            return service.getCharacteristics();
+        }).then(function (characteristics) {
+            status('Subscribing...');
+            for (c in characteristics) {
+                characteristics[c].addEventListener('characteristicvaluechanged', handleData);
+                characteristics[c].startNotifications();
+            }
+            infoBar.innerHTML = "Connected";
+            bigButton.style.backgroundColor = "#00ffff";
+        })
+            .catch(function (error) {
+                // catch any errors:
+                console.error('Connection failed!', error);
+            });
+    }
+
+    // handle incoming data:
+    function handleData(event) {
+        // get the data  from the peripheral:
+        var x = event.target.value.getFloat32(0, true); // true = byte order from Arduino is littleEndian
+        var y = event.target.value.getFloat32(4, true);
+        var z = event.target.value.getFloat32(8, true);
+
+        updateData(x, y, z); // NB need to invert to match sensor coordinate system to our 3d model
+    }
+
+    // disconnect function:
+    function disconnect() {
+        if (myDevice) {
+            // disconnect:
+            myDevice.gatt.disconnect();
+        }
+    }
+
+    // Handle Arduino client input data
+    function updateData(x, y, z, ax, ay, az, mx, my, mz) {
+        x = x + 180
+        x = x * 0.0174533;
+        y = y * 0.0174533;
+        z = z * 0.0174533;
+
+
+
+        if (calibrated == 0) {
+            // We assume initial position of physical device is as shown in 3D model before connection
+            lastX = x;
+            lastY = y;
+            lastZ = z;
+            lastX = 0;
+            lastY = 0;
+            lastZ = 0;
+            calibrated = 1;
+        }
+
+        graphData1.x.push(x);
+        graphData1.y.push(y);
+        graphData1.z.push(z);
+        // Only record last 200 entries
+        if (graphData1.x.length > 200) {
+            graphData1.x.shift();
+            graphData1.y.shift();
+            graphData1.z.shift();
+        }
+        // Update graph
+
+        var currentTime = clock.getElapsedTime() - startTime;
+        if (currentTime > 0.1) {
+            Plotly.update('graph1', {y: [graphData1.x, graphData1.y, graphData1.z]});
+            startTime = clock.getElapsedTime();
+        }
+
+        //checkManual()
+
+        // Update 3D model
+        if (useManual == false) {
+            var euler = new THREE.Euler(x + Math.PI, y, z, 'YXZ');
+            arduinoModel.setRotationFromEuler(euler);
+        }
+        var euler = new THREE.Euler(x, y, z, 'XZY')
+        /*
+        arduinoModel.rotation.z = x; // delta converted to radians
+        arduinoModel.rotation.y = y;
+        arduinoModel.rotation.z = z;
+        */
+        arduinoModel.setRotationFromEuler(euler)
+        renderer.render(scene, camera);
+    }
+
+
+    function initOneGraph(graph_id, properties) {
+        //var graph_id = 'graph'
+        var traceData = [];
+        //var properties = ["x","y","z", "ax", "ay", "az", "mx", "my", "mz"];
+        var i = 0;
+        properties.forEach(function (key) {
+            i++;
+            var trace = {
+                y: [],
+                mode: 'scatter',
+                line: {color: colors[(i * 2)]},
+                name: key
+            };
+            traceData.push(trace);
+        });
+
+        Plotly.plot(graph_id, traceData,
+            {
+                plot_bgcolor: '#ffffff',
+                paper_bgcolor: '#ffffff',
+                margin: {l: 30, r: 30, b: 25, t: 25},
+                color: '#ffffff',
+                'xaxis': {'range': [500], 'autorange': "true"}
+            });
+    }
+
+    function initGraph() {
+        var properties1 = ["x", "y", "z"];
+        var properties2 = ["ax", "ay", "az"];
+        var properties3 = ["mx", "my", "mz"];
+        startTime = clock.getElapsedTime();
+        initOneGraph("graph1", properties1);
+        initOneGraph("graph2", properties2);
+        initOneGraph("graph3", properties3);
+
+    }
+
+    function init3D() {
+
+        var container = document.getElementById('3d');
+        var loader = new THREE.GLTFLoader();
+
+        scene.background = new THREE.Color(0xffffff);
+        renderer.setSize(1100, 800);
+        renderer.setPixelRatio(1);
+        container.appendChild(renderer.domElement);
+
+        // loader.load( '3d-model/liver1_rot.gltf',
+        loader.load('3d-model/liver1_translated.gltf',
+            // called when the Arduinio model is loaded
+            function (gltf) {
+                // Model
+                arduinoModel = gltf.scene;
+                scene.add(arduinoModel);
+
+                // Light
+                var light1 = new THREE.PointLight(0xc0f0ff, 9, 0);
+                light1.position.set(200, -1, 20);
+                scene.add(light1);
+                var directionalLight = new THREE.HemisphereLight(0xffffbb, 0x002080, 1);
+                directionalLight.position.set(180, 180, 0);
+                scene.add(directionalLight);
+                var light = new THREE.AmbientLight(0x111111);
+                scene.add(light);
+
+                //arduinoModel.rotation.x = Matg.PI / 2;
+                // Camera
+                camera.position.set(0, 280, 0);
+                camera.rotation.y = Math.PI / 2; // 180
+                camera.lookAt(new THREE.Vector3(0, 0, 0));
+                //camera.rotation.z = Math.PI / 2;
+                //arduinoModel.rotation.x = Math.PI / 2
+                //arduinoModel.rotation.y = - Math.PI / 2
+                //var yaxis = new THREE.Vector3(0.0,1.0,0.0)
+                //arduinoModel.rotateOnAxis(new THREE.Vector3(0,1,0), 0*Math.PI/2)
+                //arduinoModel.rotateOnAxis(new THREE.Vector3(0,1,0), Math.PI/2)
+                // arduinoModel.rotateOnAxis(new THREE.Vector3(1,0,0), Math.PI/2)
+                //renderer.render(scene, camera);
+                //arduinoModel.rotateOnAxis(new THREE.Vector3(1,0,0), 1*Math.PI/2)
+                renderer.render(scene, camera);
+            }
+        );
     };
-    traceData.push(trace);
-  });
 
-  Plotly.plot(graph_id, traceData,
-  {
-    plot_bgcolor: '#ffffff',
-    paper_bgcolor: '#ffffff',
-    margin: {l:30,r:30,b:25,t:25},
-    color: '#ffffff',
-    'xaxis': {'range': [500], 'autorange': "true"}
-  });
-}
-
-function initGraph(){
-  var properties1 = ["x","y","z"];
-  var properties2 = ["ax", "ay", "az"];
-  var properties3 = ["mx", "my", "mz"];
-  startTime = clock.getElapsedTime();
-  initOneGraph("graph1", properties1);
-  initOneGraph("graph2", properties2);
-  initOneGraph("graph3", properties3);
-
-}
-
-function init3D(){
-
-  var container = document.getElementById( '3d' );
-  var loader = new THREE.GLTFLoader();
-
-  scene.background = new THREE.Color( 0xffffff );
-  renderer.setSize( 1100, 800 );
-  renderer.setPixelRatio( 4 );
-  container.appendChild( renderer.domElement );
-
-  // loader.load( '3d-model/liver1_rot.gltf',
-  loader.load( '3d-model/liver1_translated.gltf',
-  // called when the Arduinio model is loaded
-  function ( gltf ) {
-    // Model
-    arduinoModel = gltf.scene;
-    scene.add(arduinoModel);
-
-    // Light
-    var light1 = new THREE.PointLight(0xc0f0ff, 9, 0);
-    light1.position.set(200, -1, 20);
-    scene.add(light1);
-    var directionalLight = new THREE.HemisphereLight( 0xffffbb, 0x002080, 1);
-    directionalLight.position.set(180,180,0);
-    scene.add( directionalLight );
-    var light = new THREE.AmbientLight( 0x111111 );
-    scene.add( light );
-
-    //arduinoModel.rotation.x = Matg.PI / 2;
-    // Camera
-    camera.position.set(0,280,0);
-    camera.rotation.y = Math.PI / 2; // 180
-    camera.lookAt(new THREE.Vector3(0,0,0));
-    //camera.rotation.z = Math.PI / 2; 
-    //arduinoModel.rotation.x = Math.PI / 2
-    //arduinoModel.rotation.y = - Math.PI / 2
-    //var yaxis = new THREE.Vector3(0.0,1.0,0.0)
-    //arduinoModel.rotateOnAxis(new THREE.Vector3(0,1,0), 0*Math.PI/2)
-    //arduinoModel.rotateOnAxis(new THREE.Vector3(0,1,0), Math.PI/2)
-    // arduinoModel.rotateOnAxis(new THREE.Vector3(1,0,0), Math.PI/2)
-    //renderer.render(scene, camera);
-    //arduinoModel.rotateOnAxis(new THREE.Vector3(1,0,0), 1*Math.PI/2)
-    renderer.render(scene, camera);
-  }
-);
-};
-
-init3D();
-initGraph();
+    init3D();
+    initGraph();
 
 </script>
 </html>
