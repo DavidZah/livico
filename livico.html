@@ -53,12 +53,24 @@
             <input id="checkbox1" type="checkbox" name="control" value="manual" onchange="checkManual()">Manual
             Control<br>
             <output id="checkbox1Val"></output>
+
             <input id="slider1" type="range" min="-4" max="4" step="0.1" value="0" onchange="onSlider1Change()">
             <output id="sliderVal1"></output>
             <input id="slider2" type="range" min="-4" max="4" step="0.1" value="0" onchange="onSlider2Change()">
             <output id="sliderVal2"></output>
             <input id="slider3" type="range" min="-4" max="4" step="0.1" value="0" onchange="onSlider3Change()">
             <output id="sliderVal3"></output>
+        </div>
+        <div>
+            <input id="checkbox2" type="checkbox" name="control" value="calibration" onchange="checkCalibration()">Calibration
+            activation<br>
+            <output id="checkbox2Val"></output>
+            <input id="calSlider1" type="range" min="-4" max="4" step="0.1" value="0" onchange="onSliderCal1Change()">
+            <output id="sliderCalVal1"></output>
+            <input id="calSlider2" type="range" min="-4" max="4" step="0.1" value="0" onchange="onSliderCal2Change()">
+            <output id="sliderCalVal2"></output>
+            <input id="calSlider3" type="range" min="-4" max="4" step="0.1" value="0" onchange="onSliderCal3Change()">
+            <output id="sliderCalVal3"></output>
         </div>
         <div id="graph1" style="margin-left: 1100px;height:300px;"></div>
         <div id="graph2" style="margin-left: 1100px;height:200px;"></div>
@@ -100,6 +112,11 @@
     var sl2 = 0;
     var sl3 = 0;
 
+    var cal1 = 0;
+    var cal2 = 0;
+    var cal3 = 0;
+
+    var useCaluibration = true
     var useManual = false
     var clock = new THREE.Clock;
     var statTime;
@@ -108,6 +125,13 @@
         var val = document.getElementById("checkbox1").checked //gets the oninput value
         document.getElementById('checkbox1Val').innerHTML = val //displays this value to the html page
         useManual = val
+        console.log(val)
+    }
+
+    function checkCalibration() {
+        var val = document.getElementById("checkbox2").checked //gets the oninput value
+        document.getElementById('checkbox2Val').innerHTML = val //displays this value to the html page
+        useCaluibration = val
         console.log(val)
     }
 
@@ -141,6 +165,23 @@
 
     }
 
+    function onSliderCal1Change() {
+        var val = document.getElementById("calSlider1").value
+        cal1 = val
+        document.getElementById('sliderCalVal1').innerHTML = val
+    }
+
+    function onSliderCal2Change() {
+        var val = document.getElementById("calSlider2").value
+        cal2 = val
+        document.getElementById('sliderCalVal2').innerHTML = val
+    }
+
+    function onSliderCal3Change() {
+        var val = document.getElementById("calSlider3").value
+        cal1 = val
+        document.getElementById('sliderCalVal3').innerHTML = val
+    }
 
     if ("bluetooth" in navigator) {
         bigButton.addEventListener('click', function (event) {
@@ -189,11 +230,11 @@
     // handle incoming data:
     function handleData(event) {
         // get the data  from the peripheral:
-        var x = event.target.value.getFloat32(0, true); // true = byte order from Arduino is littleEndian
-        var y = event.target.value.getFloat32(4, true);
-        var z = event.target.value.getFloat32(8, true);
-
-        updateData(x, y, z); // NB need to invert to match sensor coordinate system to our 3d model
+        var w = event.target.value.getFloat32(0, true); // true = byte order from Arduino is littleEndian
+        var x = event.target.value.getFloat32(4, true);
+        var y = event.target.value.getFloat32(8, true);
+        var z = event.target.value.getFloat32(12, true);
+        updateData(w, x, y, z); // NB need to invert to match sensor coordinate system to our 3d model
     }
 
     // disconnect function:
@@ -205,13 +246,17 @@
     }
 
     // Handle Arduino client input data
-    function updateData(x, y, z, ax, ay, az, mx, my, mz) {
-        x = x + 180
-        x = x * 0.0174533;
-        y = y * 0.0174533;
-        z = z * 0.0174533;
+    function updateData(w, x, y, z) {
 
+        const quaternion = new THREE.Quaternion();
+        quaternion.set(x, y, z, w);
 
+        var euler = new THREE.Euler(x, y, z, 'XYZ')
+        euler.setFromQuaternion(quaternion)
+
+        x = euler.x
+        y = euler.y
+        z = euler.z
 
         if (calibrated == 0) {
             // We assume initial position of physical device is as shown in 3D model before connection
@@ -245,15 +290,13 @@
 
         // Update 3D model
         if (useManual == false) {
-            var euler = new THREE.Euler(x + Math.PI, y, z, 'YXZ');
+            var euler = new THREE.Euler(x + Math.PI, y, z, 'XYZ');
             arduinoModel.setRotationFromEuler(euler);
         }
-        var euler = new THREE.Euler(x, y, z, 'XZY')
-        /*
-        arduinoModel.rotation.z = x; // delta converted to radians
-        arduinoModel.rotation.y = y;
-        arduinoModel.rotation.z = z;
-        */
+        if (useCaluibration == true) {
+            euler = new THREE.Euler(x + parseFloat(cal1), y + parseFloat(cal2), z + parseFloat(cal3), 'XYZ')
+        }
+
         arduinoModel.setRotationFromEuler(euler)
         renderer.render(scene, camera);
     }

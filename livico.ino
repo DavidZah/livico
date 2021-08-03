@@ -5,6 +5,8 @@
 #include <Adafruit_BNO055.h>
 #include <utility/imumaths.h>
 
+#define MSG_LENGHT 16
+
 #define BNO055_SAMPLERATE_DELAY_MS (100)
 
 // Check I2C device address and correct line below (by default address is 0x29 or 0x28)
@@ -15,7 +17,7 @@ Adafruit_BNO055 bno = Adafruit_BNO055(55, 0x29);
 BLEService imuService("917649A0-D98E-11E5-9EEC-0002A5D5C51B"); // Custom UUID
 
 // BLE Characteristic
-BLECharacteristic imuCharacteristic("917649A1-D98E-11E5-9EEC-0002A5D5C51B", BLERead | BLENotify, 12);
+BLECharacteristic imuCharacteristic("917649A1-D98E-11E5-9EEC-0002A5D5C51B", BLERead | BLENotify, MSG_LENGHT);
 
 long previousMillis = 0;  // last timechecked, in ms
 
@@ -51,18 +53,17 @@ void setup() {
 
 void getDataAndSend() {
     
-    sensors_event_t event;
-    bno.getEvent(&event);
+     imu::Quaternion quat = bno.getQuat();
    
 
-    float eulers[3];
+    float angels[5];
     
     
-    eulers[0] = event.orientation.x;
-    eulers[1] = event.orientation.y;
-    eulers[2] = event.orientation.z;
-
-    imuCharacteristic.setValue((byte * ) & eulers, 12);
+    angels[0] = (float)quat.w();
+    angels[1] = (float)quat.x();
+    angels[2] = (float)quat.y();
+    angels[3] = (float)quat.z(); 
+    imuCharacteristic.setValue((byte * ) & angels, MSG_LENGHT);
 }
 
 void loop() {
