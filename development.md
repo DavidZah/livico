@@ -1,7 +1,3 @@
-
-
-
-
 IIS Web Server 
 ====
 
@@ -30,7 +26,9 @@ add MIME TYPE
 .gltf
 model/gltf+json
 
-
+#Code
+From BN055 we get quaterions. After transfare via GATT server to Javascript.
+We transform quaterions to euler angles and then display them.
 
 Errors 
 =====
@@ -42,6 +40,7 @@ https://stackoverflow.com/questions/19162553/iis-401-3-unauthorized
 
 and then Anonymní přístup -> Upravit -> Identita fondu aplikací
 
+BNO055 not find check address in Arduino code chip in use have Adress pin pull down.
 
 Bluetooth
 ===
@@ -65,19 +64,11 @@ c:/inetpub/wwwroot/livico
 Hardware
 ===
 
-arduino nano 33 ble
-
-https://store.arduino.cc/arduino-nano-33-ble-with-headers
-
-
-
+Controler is based on [Arduino Nano 33 BLE](https://store.arduino.cc/products/arduino-nano-33-ble). 
+World orientation is get by [BNO055](https://www.bosch-sensortec.com/products/smart-sensors/bno055/)
 nabijeci modul datasheet
 https://learn.adafruit.com/adafruit-powerboost-500-plus-charger/pinouts
-
-
-do příště revize kódu, 
-přeprogramovat operace v javascriptu
-
+Conection between arduino and bno055 is by I2C bus speed is 100Khz.  
 
 3D model
 ===
